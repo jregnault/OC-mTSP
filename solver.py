@@ -23,11 +23,16 @@ class Solver:
 
     def solve(self):
         permutation = []
+        choices = []
         if self.solver == "random":
-            choices = np.array(np.arange(0,100,1)).tolist()
+            for i in self.instances:
+                choices.append(np.array(np.arange(0,100,1)).tolist())
             for _ in range(0,100):
-                n = random.choice(choices)
-                permutation.append(n)
-                choices.remove(n)
+                point = []
+                for c in choices:
+                    n = random.choice(c)
+                    point.append(n)
+                    c.remove(n)
+                permutation.append(point)
 
         return permutation
