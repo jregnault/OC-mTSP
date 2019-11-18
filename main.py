@@ -1,9 +1,11 @@
 import argparse
 import random
 import string
+import matplotlib.pyplot as plt
 
 from parser import parseInstance
 from solver import Solver
+import filter
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
@@ -19,16 +21,43 @@ if __name__ == "__main__":
     weightB = random.randint(0,100) / 100
 
     solver = Solver([instanceA, instanceB], [weightA, weightB])
-    solution = solver.solve()
-    fitness = solver.fitness(solution)
+    solutions = []
+    for _ in range(0,500):
+        solutions.append(solver.solve())
 
-    psolution = "\n"
-    for s in solution:
-        psolution += str(s) + " -> "
+    offlineDominants = filter.offlineFilter(solver, solutions)
+    onlineDominants = filter.onlineFilter(solver, solutions)
 
-    pFitness = "\n"
-    for f in fitness:
-        pFitness += "\t" + str(int(f)) + "\n"
+    print(len(solutions))
+    print(len(offlineDominants))
 
-    print("Solution : " + psolution[:-3])
-    print("Fitness : " + pFitness)
+    offSX = []
+    offSY = []
+    offX = []
+    offY = []
+    for d in solutions:
+        if d in offlineDominants:
+            offX.append(solver.fitness(d)[0])
+            offY.append(solver.fitness(d)[1])
+        else:
+            offSX.append(solver.fitness(d)[0])
+            offSY.append(solver.fitness(d)[1])
+
+    plt.plot(offSX, offSY, "xb")
+    plt.plot(offX, offY, 'xr')
+    
+    plt.xlabel(args.instanceA[16])
+    plt.ylabel(args.instanceB[16])
+
+    plt.show()
+
+    #psolution = "\n"
+    #for s in solution:
+    #    psolution += str(s) + " -> "
+
+    #pFitness = "\n"
+    #for f in fitness:
+    #    pFitness += "\t" + str(int(f)) + "\n"
+
+    #print("Solution : " + psolution[:-3])
+    #print("Fitness : " + pFitness)
