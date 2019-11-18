@@ -15,7 +15,7 @@ class Solver:
         for i in range(0,len(self.weights)):
             fitness = 0
             for p in permutation:
-                fitness += self.weights[i] * self.instances[i][previous][p]
+                fitness += self.weights[i] * self.instances[i][previous[i]][p[i]]
                 previous = p
             fitnesses.append(fitness)
         
