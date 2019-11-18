@@ -24,3 +24,24 @@ def offlineFilter(solver, solutions):
             dominants.append(solutions[i])
     
     return dominants
+
+def onlineFilter(solver, solutions):
+    fitnesses = []
+    dominants = []
+
+    for s in solutions:
+        fitnesses.append(solver.fitness(s))
+    
+    dominants.append(fitnesses[0])
+    fitnesses.remove(fitnesses[0])
+
+    for f in fitnesses:
+        dominant = False
+        for d in dominants:
+            if dominates(f, d):
+                dominants.remove(d)
+                dominant = True
+        if dominant:
+            dominants.append(f)
+    
+    return dominants
