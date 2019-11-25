@@ -2,12 +2,20 @@ import argparse
 import random
 import string
 import matplotlib.pyplot as plt
+import logging
 
 from parser import parseInstance
 from solver import Solver
 import filter
 
 if __name__ == "__main__":
+
+    logging.basicConfig(
+        format='[%(asctime)s][%(levelname)s] %(message)s',
+        level=logging.DEBUG,
+        datefmt="%d-%m-%Y %H:%M:%S"
+    )
+
     parser = argparse.ArgumentParser()
     parser.add_argument('instanceA')
     parser.add_argument('instanceB')
@@ -28,8 +36,7 @@ if __name__ == "__main__":
     offlineDominants = filter.offlineFilter(solver, solutions)
     onlineDominants = filter.onlineFilter(solver, solutions)
 
-    print(len(solutions))
-    print(len(offlineDominants))
+    logging.debug("There are %d solutions, with %d dominants.", len(solutions), len(offlineDominants))
 
     offSX = []
     offSY = []
