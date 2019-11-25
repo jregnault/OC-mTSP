@@ -9,6 +9,13 @@ class Solver:
         self.solver = solver
     
     def fitness(self, permutation):
+        """Computes the fitness for every objective in the permutation
+        Input:
+        ------
+        - permutation : the solution to test
+
+        Output: an array containing the fitness of every objective in the permutation.
+        """
         fitnesses = []
         previous = permutation[0]
 
@@ -25,7 +32,7 @@ class Solver:
         permutation = []
         choices = []
         if self.solver == "random":
-            for i in self.instances:
+            for _ in self.instances:
                 choices.append(np.array(np.arange(0,100,1)).tolist())
             for _ in range(0,100):
                 point = []
