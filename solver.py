@@ -1,5 +1,6 @@
 import random
 import numpy as np
+import logging
 
 class Solver:
 
@@ -43,3 +44,28 @@ class Solver:
                 permutation.append(point)
 
         return permutation
+    
+    def dominates(self, fitA, fitB):
+        result = True
+        for i in range(0, len(fitA)):
+            result = result and (fitA[i] <= fitB[i])
+        return result
+    
+    def isDominant(self, solution, solutions):
+        if solutions == []:
+            logging.debug("isDominant : solutions is empty.")
+            return True
+        elif self.dominates(self.fitness(solutions[0]), self.fitness(solution)):
+            return False
+        else:
+            return self.isDominant(solution, solutions[1:])
+    
+    def offlineFilter(self, solutions):
+        dominants = []
+
+        for s in solutions:
+            if self.isDominant(s, solutions):
+                dominants.append(s)
+                logging.debug("dominants = ".join(str(i) for i in s))
+        
+        return dominants

@@ -6,7 +6,6 @@ import logging
 
 from parser import parseInstance
 from solver import Solver
-import filter
 
 if __name__ == "__main__":
 
@@ -33,8 +32,7 @@ if __name__ == "__main__":
     for _ in range(0,500):
         solutions.append(solver.solve())
 
-    offlineDominants = filter.offlineFilter(solver, solutions)
-    onlineDominants = filter.onlineFilter(solver, solutions)
+    offlineDominants = solver.offlineFilter(solutions)
 
     logging.debug("There are %d solutions, with %d dominants.", len(solutions), len(offlineDominants))
 
