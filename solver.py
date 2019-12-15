@@ -8,6 +8,10 @@ class Solver:
         self.instances = instances
         self.weights = weights
         self.solver = solver
+        self.comps = 0
+    
+    def resetTicks(self):
+        self.comps = 0
     
     def fitness(self, permutation):
         """Computes the fitness for every objective in the permutation
@@ -46,6 +50,7 @@ class Solver:
         return permutation
     
     def dominates(self, fitA, fitB):
+        self.comps += 1
         return (fitA[0] < fitB[0]) and (fitA[1] < fitB[1])
     
     def getDominants(self, solutions):

@@ -3,6 +3,7 @@ import random
 import string
 import matplotlib.pyplot as plt
 import logging
+import numpy as np
 
 from parser import parseInstance
 from solver import Solver
@@ -37,7 +38,7 @@ if __name__ == "__main__":
 
     offlineDominants = solver.offlineFilter(dominants)
 
-    logging.info("There are %d solutions, with %d dominants.", len(solutions), len(offlineDominants))
+    logging.info("There are %d solutions, with %d dominants (%d comparisons).", len(solutions), len(offlineDominants), solver.comps)
 
     offSX = []
     offSY = []
@@ -60,8 +61,9 @@ if __name__ == "__main__":
     plt.title("Front Pareto calculé avec un filtre offline")
     plt.show()
 
+    solver.resetTicks()
     onlineDominants = solver.onlineFilter(dominants)
-    logging.info("There are %d solutions, with %d dominants.", len(solutions), len(onlineDominants))
+    logging.info("There are %d solutions, with %d dominants (%d comparisons).", len(solutions), len(onlineDominants), solver.comps)
 
     offSX = []
     offSY = []
@@ -84,6 +86,31 @@ if __name__ == "__main__":
     plt.title("Front Pareto calculé avec un filtre online")
     plt.show()
 
+    offlineComps = []
+    onlineComps = []
+    for p in range(1,1001):
+        logging.info("itération %d", p)
+        solutions = []
+        dominants = []
+        for _ in range(0,p):
+            s = solver.solve()
+            solutions.append(s)
+            dominants.append(s)
+        solver.resetTicks()
+        solver.offlineFilter(dominants)
+        offlineComps.append(solver.comps)
+        solver.resetTicks()
+        solver.onlineFilter(dominants)
+        onlineComps.append(solver.comps)
+    
+    p = np.arange(1,1001,1)
+    plt.plot(p, offlineComps, label="offline filter")
+    plt.plot(p, onlineComps, label="online filter")
+    plt.xlabel("nombre de solutions générées")
+    plt.ylabel("nombre de comparaisons")
+    plt.legend()
+    plt.title("Nombre de comparaisons en fonctions du nombre de solutions")
+    plt.show()
     #psolution = "\n"
     #for s in solution:
     #    psolution += str(s) + " -> "
