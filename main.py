@@ -29,10 +29,13 @@ if __name__ == "__main__":
 
     solver = Solver([instanceA, instanceB], [weightA, weightB])
     solutions = []
+    dominants = []
     for _ in range(0,500):
-        solutions.append(solver.solve())
+        s = solver.solve()
+        solutions.append(s)
+        dominants.append(s)
 
-    offlineDominants = solver.offlineFilter(solutions)
+    offlineDominants = solver.offlineFilter(dominants)
 
     logging.debug("There are %d solutions, with %d dominants.", len(solutions), len(offlineDominants))
 

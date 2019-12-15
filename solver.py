@@ -46,26 +46,25 @@ class Solver:
         return permutation
     
     def dominates(self, fitA, fitB):
-        result = True
-        for i in range(0, len(fitA)):
-            result = result and (fitA[i] <= fitB[i])
-        return result
+        return (fitA[0] < fitB[0]) and (fitA[1] < fitB[1])
     
-    def isDominant(self, solution, solutions):
-        if solutions == []:
-            logging.debug("isDominant : solutions is empty.")
-            return True
-        elif self.dominates(self.fitness(solutions[0]), self.fitness(solution)):
-            return False
-        else:
-            return self.isDominant(solution, solutions[1:])
-    
-    def offlineFilter(self, solutions):
-        dominants = []
-
+    def getDominants(self, solutions):
+        dominants = solutions
+        
         for s in solutions:
-            if self.isDominant(s, solutions):
-                dominants.append(s)
-                logging.debug("dominants = ".join(str(i) for i in s))
+            if s in dominants:
+                rejected = []
+                a = self.fitness(s)
+                for d in dominants:
+                    b = self.fitness(d)
+                    if self.dominates(a, b):
+                        rejected.append(d)
+                for r in rejected:
+                    dominants.remove(r)
+        
+        return dominants
+
+    def offlineFilter(self, solutions):
+        dominants = self.getDominants(solutions)
         
         return dominants
