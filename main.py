@@ -11,7 +11,7 @@ if __name__ == "__main__":
 
     logging.basicConfig(
         format='[%(asctime)s][%(levelname)s] %(message)s',
-        level=logging.DEBUG,
+        level=logging.INFO,
         datefmt="%d-%m-%Y %H:%M:%S"
     )
 
@@ -37,7 +37,7 @@ if __name__ == "__main__":
 
     offlineDominants = solver.offlineFilter(dominants)
 
-    logging.debug("There are %d solutions, with %d dominants.", len(solutions), len(offlineDominants))
+    logging.info("There are %d solutions, with %d dominants.", len(solutions), len(offlineDominants))
 
     offSX = []
     offSY = []
@@ -57,6 +57,31 @@ if __name__ == "__main__":
     plt.xlabel(args.instanceA[16])
     plt.ylabel(args.instanceB[16])
 
+    plt.title("Front Pareto calculé avec un filtre offline")
+    plt.show()
+
+    onlineDominants = solver.onlineFilter(dominants)
+    logging.info("There are %d solutions, with %d dominants.", len(solutions), len(onlineDominants))
+
+    offSX = []
+    offSY = []
+    offX = []
+    offY = []
+    for d in solutions:
+        if d in onlineDominants:
+            offX.append(solver.fitness(d)[0])
+            offY.append(solver.fitness(d)[1])
+        else:
+            offSX.append(solver.fitness(d)[0])
+            offSY.append(solver.fitness(d)[1])
+
+    plt.plot(offSX, offSY, "xb")
+    plt.plot(offX, offY, 'xr')
+    
+    plt.xlabel(args.instanceA[16])
+    plt.ylabel(args.instanceB[16])
+
+    plt.title("Front Pareto calculé avec un filtre online")
     plt.show()
 
     #psolution = "\n"

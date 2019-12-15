@@ -68,3 +68,11 @@ class Solver:
         dominants = self.getDominants(solutions)
         
         return dominants
+
+    def onlineFilter(self, solutions):
+        dominants = []
+        for s in solutions:
+            dominants.append(s)
+            dominants = self.getDominants(dominants)
+        
+        return dominants
