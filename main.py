@@ -88,22 +88,29 @@ if __name__ == "__main__":
 
     offlineComps = []
     onlineComps = []
-    for p in range(1,1001):
+    for p in range(1,201):
         logging.info("itération %d", p)
-        solutions = []
-        dominants = []
-        for _ in range(0,p):
-            s = solver.solve()
-            solutions.append(s)
-            dominants.append(s)
-        solver.resetTicks()
-        solver.offlineFilter(dominants)
-        offlineComps.append(solver.comps)
-        solver.resetTicks()
-        solver.onlineFilter(dominants)
-        onlineComps.append(solver.comps)
+        offComp = 0
+        onComp = 0
+        for _ in range(0,100):
+            solutions = []
+            dominants = []
+            for _ in range(0,p):
+                s = solver.solve()
+                solutions.append(s)
+                dominants.append(s)
+            solver.resetTicks()
+            solver.offlineFilter(dominants)
+            offComp += solver.comps
+            solver.resetTicks()
+            solver.onlineFilter(dominants)
+            onComp += solver.comps
+        offComp /= 100
+        onComp /= 100
+        offlineComps.append(offComp)
+        onlineComps.append(onComp)
     
-    p = np.arange(1,1001,1)
+    p = np.arange(1,201,1)
     plt.plot(p, offlineComps, label="offline filter")
     plt.plot(p, onlineComps, label="online filter")
     plt.xlabel("nombre de solutions générées")
